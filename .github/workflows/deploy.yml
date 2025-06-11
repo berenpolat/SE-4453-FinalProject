@@ -1,0 +1,39 @@
+name: Build & Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main  # ← kendi branch’ine göre güncelle
+
+env:
+  REGISTRY: acr4453beren.azurecr.io
+  IMAGE_NAME: springboot-app
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure CLI - Login to ACR
+      run: |
+        echo ${{ secrets.REGISTRY_PASSWORD }} | docker login ${{ env.REGISTRY }} -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+
+    - name: Build Docker image
+      run: docker build -t $REGISTRY/$IMAGE_NAME:latest .
+
+    - name: Push Docker image
+      run: docker push $REGISTRY/$IMAGE_NAME:latest
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: se4453-finalapp
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
