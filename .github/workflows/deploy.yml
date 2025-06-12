@@ -36,4 +36,4 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: se4453-finalapp
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest   
