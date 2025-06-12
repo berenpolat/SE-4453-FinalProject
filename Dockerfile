@@ -1,5 +1,9 @@
 FROM openjdk:17-slim
+ 
 WORKDIR /app
-COPY ./target/demo-0.0.1-SNAPSHOT.jar /app/demo.jar
-EXPOSE 8080
-CMD ["java", "-jar", "/app/demo.jar"]
+ 
+COPY . .
+ 
+RUN ./mvnw clean install -DskipTests
+ 
+CMD ["java", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
