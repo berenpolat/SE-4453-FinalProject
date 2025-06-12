@@ -3,9 +3,9 @@ WORKDIR /app
 
 COPY . .
 
-# 🛠 mvnw dosyasını çalıştırılabilir yap
 RUN chmod +x mvnw
 
 RUN ./mvnw clean install -DskipTests
 
-CMD ["java", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
+# DEBUG
+CMD echo "DEBUG $#$ Port: $PORT..." && java -Dserver.port=$PORT -jar target/demo-0.0.1-SNAPSHOT.jar
