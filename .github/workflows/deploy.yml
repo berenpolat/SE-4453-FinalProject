@@ -3,7 +3,7 @@ name: Build & Deploy to Azure
 on:
   push:
     branches:
-      - main  # ← kendi branch’ine göre güncelle
+      - main  # kendi branch’ine göre güncelle
 
 env:
   REGISTRY: acr4453beren.azurecr.io
@@ -22,9 +22,9 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Azure CLI - Login to ACR
+    - name: Login to ACR
       run: |
-        echo ${{ secrets.REGISTRY_PASSWORD }} | docker login ${{ env.REGISTRY }} -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+        echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login ${{ env.REGISTRY }} -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
 
     - name: Build Docker image
       run: docker build -t $REGISTRY/$IMAGE_NAME:latest .
@@ -36,4 +36,4 @@ jobs:
       uses: azure/webapps-deploy@v2
       with:
         app-name: se4453-finalapp
-        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest   
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
